@@ -59,7 +59,7 @@ public class BlockListener implements Listener {
             int blockY = (int) event.getBlock().getLocation().getY();
             int blockZ = (int) event.getBlock().getLocation().getZ();
             World world = event.getBlock().getWorld();
-            int radius = 4;
+            int radius = 5;
             for (int x = blockX - radius; x <= blockX + radius; x++) {
                 for (int y = blockY - radius; y <= blockY + radius; y++) {
                     for (int z = blockZ - radius; z <= blockZ + radius; z++) {
