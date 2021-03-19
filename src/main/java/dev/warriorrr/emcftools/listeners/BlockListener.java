@@ -1,6 +1,7 @@
 package dev.warriorrr.emcftools.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -8,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.Leaves;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,8 +18,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 
 import net.md_5.bungee.api.ChatColor;
+import net.prosavage.factionsx.core.Faction;
+import net.prosavage.factionsx.manager.GridManager;
 
 import static dev.warriorrr.emcftools.EMCFTools.prefix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockListener implements Listener {
     /*
@@ -25,6 +32,32 @@ public class BlockListener implements Listener {
     */
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPortalCreate(PortalCreateEvent event) {
+        List<Chunk> chunks = new ArrayList<Chunk>();
+        List<Faction> factions = new ArrayList<Faction>();
+        for (BlockState blockState : event.getBlocks()) {
+            if (!chunks.contains(blockState.getChunk()))
+                chunks.add(blockState.getChunk());
+        }
+        for (Chunk chunk : chunks) {
+            Faction faction = GridManager.INSTANCE.getFactionAt(chunk);
+            if (!factions.contains(faction) && !faction.isWilderness())
+                factions.add(faction);
+        }
+        if (!factions.isEmpty()) {
+            if (!(event.getEntity() instanceof Player)) {
+                event.setCancelled(true);
+                return;
+            }
+            Player player = (Player) event.getEntity();
+            for (Faction faction : factions) {
+                if (!faction.getFactionMembers().contains(player.getUniqueId())) {
+                    event.setCancelled(true);
+                    player.sendMessage(prefix + ChatColor.RED + " Nether portal creation cancelled. Try moving it somewhere else.");
+                    return;
+                }
+            }
+        }
+
         for (BlockState blockState : event.getBlocks()) {
             if (blockState.getY() == 0)
                 blockState.setBlockData(Bukkit.createBlockData(Material.BEDROCK));
