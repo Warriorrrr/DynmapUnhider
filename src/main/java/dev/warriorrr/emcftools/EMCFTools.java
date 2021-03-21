@@ -1,7 +1,11 @@
 package dev.warriorrr.emcftools;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import dev.warriorrr.emcftools.commands.SuicideCommand;
@@ -29,6 +33,7 @@ public class EMCFTools extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
 
         getCommand("suicide").setExecutor(new SuicideCommand());
+        registerRecipes();
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -39,5 +44,27 @@ public class EMCFTools extends JavaPlugin implements Listener {
                 }
             }
         }, 1200, 1200);
+    }
+
+    private void registerRecipes() {
+        ShapedRecipe tubeCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_tubeCoral"), new ItemStack(Material.TUBE_CORAL_BLOCK));
+        tubeCoral.shape("CC", "CC").setIngredient('C', Material.TUBE_CORAL);
+        Bukkit.addRecipe(tubeCoral);
+
+        ShapedRecipe brainCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_brainCoral"), new ItemStack(Material.BRAIN_CORAL_BLOCK));
+        tubeCoral.shape("CC", "CC").setIngredient('C', Material.BRAIN_CORAL);
+        Bukkit.addRecipe(brainCoral);
+
+        ShapedRecipe bubbleCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_bubbleCoral"), new ItemStack(Material.BUBBLE_CORAL_BLOCK));
+        tubeCoral.shape("CC", "CC").setIngredient('C', Material.BUBBLE_CORAL);
+        Bukkit.addRecipe(bubbleCoral);
+
+        ShapedRecipe fireCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_fireCoral"), new ItemStack(Material.FIRE_CORAL_BLOCK));
+        tubeCoral.shape("CC", "CC").setIngredient('C', Material.FIRE_CORAL);
+        Bukkit.addRecipe(fireCoral);
+
+        ShapedRecipe hornCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_hornCoral"), new ItemStack(Material.HORN_CORAL_BLOCK));
+        tubeCoral.shape("CC", "CC").setIngredient('C', Material.HORN_CORAL);
+        Bukkit.addRecipe(hornCoral);
     }
 }
