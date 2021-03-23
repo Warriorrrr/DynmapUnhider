@@ -51,25 +51,11 @@ public class EMCFTools extends JavaPlugin implements Listener {
     }
 
     private void registerRecipes() {
-        ShapedRecipe tubeCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_tubeCoral"), new ItemStack(Material.TUBE_CORAL_BLOCK));
-        tubeCoral.shape("CC", "CC").setIngredient('C', Material.TUBE_CORAL);
-        Bukkit.addRecipe(tubeCoral);
-
-        ShapedRecipe brainCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_brainCoral"), new ItemStack(Material.BRAIN_CORAL_BLOCK));
-        brainCoral.shape("CC", "CC").setIngredient('C', Material.BRAIN_CORAL);
-        Bukkit.addRecipe(brainCoral);
-
-        ShapedRecipe bubbleCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_bubbleCoral"), new ItemStack(Material.BUBBLE_CORAL_BLOCK));
-        bubbleCoral.shape("CC", "CC").setIngredient('C', Material.BUBBLE_CORAL);
-        Bukkit.addRecipe(bubbleCoral);
-
-        ShapedRecipe fireCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_fireCoral"), new ItemStack(Material.FIRE_CORAL_BLOCK));
-        fireCoral.shape("CC", "CC").setIngredient('C', Material.FIRE_CORAL);
-        Bukkit.addRecipe(fireCoral);
-
-        ShapedRecipe hornCoral = new ShapedRecipe(new NamespacedKey(this, "emcf_hornCoral"), new ItemStack(Material.HORN_CORAL_BLOCK));
-        hornCoral.shape("CC", "CC").setIngredient('C', Material.HORN_CORAL);
-        Bukkit.addRecipe(hornCoral);
+        for (Material coral : Tag.CORAL_PLANTS.getValues()) {
+            ShapedRecipe coralRecipe = new ShapedRecipe(new NamespacedKey(this, coral.toString().toLowerCase() + "Recipe"), new ItemStack(Material.valueOf(coral.toString() + "_BLOCK")));
+            coralRecipe.shape("CC", "CC").setIngredient('C', coral);
+            Bukkit.addRecipe(coralRecipe);
+        } 
 
         for (Material carpet : Tag.CARPETS.getValues()) {
             ShapelessRecipe carpetRecipe = new ShapelessRecipe(new NamespacedKey(this, carpet.toString().toLowerCase() + "Recipe"), new ItemStack(carpet, 2));
