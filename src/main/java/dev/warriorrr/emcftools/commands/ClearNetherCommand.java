@@ -14,8 +14,6 @@ import net.prosavage.factionsx.persist.data.Factions;
 
 import static dev.warriorrr.emcftools.EMCFTools.prefix;
 
-import java.util.Map.Entry;
-
 public class ClearNetherCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof ConsoleCommandSender)) {
@@ -24,10 +22,10 @@ public class ClearNetherCommand implements CommandExecutor {
         }
 
         int netherClaims = 0;
-        for (Entry<Long, Faction> entry : Factions.INSTANCE.getFactions().entrySet()) {
-            for (FLocation fLocation : GridManager.INSTANCE.getAllClaims(entry.getValue())) {
+        for (Faction faction : Factions.INSTANCE.getFactions().values()) {
+            for (FLocation fLocation : GridManager.INSTANCE.getAllClaims(faction)) {
                 if (fLocation.getChunk().getWorld().getEnvironment() == Environment.NETHER) {
-                    GridManager.INSTANCE.unclaim(entry.getValue(), fLocation);
+                    GridManager.INSTANCE.unclaim(faction, fLocation);
                     netherClaims += 1;
                 }
             }
