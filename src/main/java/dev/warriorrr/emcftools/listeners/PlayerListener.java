@@ -1,17 +1,18 @@
 package dev.warriorrr.emcftools.listeners;
 
-import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Container;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.dynmap.DynmapAPI;
 
+import dev.warriorrr.emcftools.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 import static dev.warriorrr.emcftools.EMCFTools.prefix;
@@ -20,13 +21,14 @@ import static dev.warriorrr.emcftools.EMCFTools.recentlySuicided;
 public class PlayerListener  implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
+        //Send string that disables voxelmap
         event.getPlayer().sendMessage("§3 §6 §3 §6 §3 §6 §e §r §3 §6 §3 §6 §3 §6 §d ");
         
-        DynmapAPI api = ((DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap"));
-                
-        if (!api.getPlayerVisbility(event.getPlayer())) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dynmap show " + event.getPlayer().getName());
-            event.getPlayer().sendMessage(prefix + ChatColor.AQUA + " You are now shown on Dynmap.");
+        if (Utils.isHiddenOnDynmap(event.getPlayer())) {
+            if (!Utils.canBeHidden(event.getPlayer()))
+                Utils.showPlayer(event.getPlayer());
+            else
+                event.getPlayer().sendMessage(prefix + ChatColor.AQUA + " You are still hidden on dynmap.");
         }
     }
 
@@ -54,6 +56,17 @@ public class PlayerListener  implements Listener {
             container.getInventory().clear();
             event.getClickedBlock().setType(Material.BEDROCK);  
         }
+    }
+
+    @EventHandler
+    public void onGameModeSwitch(PlayerGameModeChangeEvent event) {
+        if (!Utils.canBeHidden(event.getPlayer()))
+            return;
+
+        if (event.getNewGameMode() == GameMode.SPECTATOR && !Utils.isHiddenOnDynmap(event.getPlayer()))
+            Utils.hidePlayer(event.getPlayer());
+        else if (event.getNewGameMode() == GameMode.SURVIVAL && Utils.isHiddenOnDynmap(event.getPlayer()))
+            event.getPlayer().sendMessage(prefix + ChatColor.AQUA + " You are still hidden on dynmap.");
     }
 
     private boolean isContainter(Material material) {

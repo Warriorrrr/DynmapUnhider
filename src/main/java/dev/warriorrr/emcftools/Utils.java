@@ -1,6 +1,11 @@
 package dev.warriorrr.emcftools;
 
 import java.awt.Color;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.dynmap.DynmapAPI;
+
+import static dev.warriorrr.emcftools.EMCFTools.prefix;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -23,5 +28,24 @@ public class Utils {
             sb.append(string.charAt(i));
         }
         return sb.toString();
+    }
+
+    public static boolean isHiddenOnDynmap(Player player) {
+        DynmapAPI dynmapApi = ((DynmapAPI) Bukkit.getPluginManager().getPlugin("dynmap"));
+        return !dynmapApi.getPlayerVisbility(player);
+    }
+
+    public static boolean canBeHidden(Player player) {
+        return player.hasPermission("dynmap.hide.self");
+    }
+
+    public static void hidePlayer(Player player) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dynmap hide " + player.getName());
+        player.sendMessage(prefix + ChatColor.AQUA + " You are now hidden on Dynmap.");
+    }
+
+    public static void showPlayer(Player player) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dynmap show " + player.getName());
+        player.sendMessage(prefix + ChatColor.AQUA + " You are now shown on Dynmap.");
     }
 }
