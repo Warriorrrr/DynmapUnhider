@@ -32,7 +32,6 @@ public class EMCFTools extends JavaPlugin implements Listener {
     public static String prefix = ChatColor.GOLD + "[" + Utils.gradient("EMCF", Color.GREEN, new Color(0, 102, 0)) + ChatColor.GOLD + "]";
     public static Map<UUID, Long> suicideCooldowns = new HashMap<>();
     public static List<UUID> recentlySuicided = new ArrayList<>();
-    public static Map<UUID, Long> blacklists = new HashMap<>();
     public static Map<UUID, String> clientBrands = new HashMap<>();
 
     @Override
@@ -54,11 +53,6 @@ public class EMCFTools extends JavaPlugin implements Listener {
                 for (Entry<UUID, Long> entry : suicideCooldowns.entrySet()) {
                     if (System.currentTimeMillis() > entry.getValue())
                         suicideCooldowns.remove(entry.getKey());
-                }
-
-                for (Entry<UUID, Long> entry : blacklists.entrySet()) {
-                    if (System.currentTimeMillis() > entry.getValue())
-                        blacklists.remove(entry.getKey());
                 }
             }
         }, 1200, 1200);
